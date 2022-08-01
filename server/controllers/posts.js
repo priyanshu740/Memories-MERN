@@ -1,5 +1,9 @@
 import PostMessage from '../models/postMessage.js';
 import  mongoose  from 'mongoose';
+import express from 'express'
+
+const router = express.Router()
+
 export const getPosts = async (req,res) => {
     try{
         const postMessages = await PostMessage.find()
@@ -46,25 +50,33 @@ export const deletePost = async (req,res) => {
 }
 
 export const likePost = async (req,res) => {
-    const {id} = req.params
+    try {
+        const {id} = req.params
+    
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`no post find with ${id}`)
+    
+        const post = await PostMessage.findById(id)
+        const updatedPost = await PostMessage.findByIdAndUpdate(id,{likeCount:post.likeCount + 1},{new:true})
 
-    if (!req.userId){
-        res.json({message:"you aree not authenticated"})
+        res.json(updatedPost)
+        
+    } catch (error) {
+        console.log(error)
     }
+    console.log(likePost);
+  
+}
+export default router
 
-    if(!mongoose.Types.ObjectId.isValid(id)) return req.status(404).send(`no post find with ${id}`)
+export const searchPost = async (req,res) => {
+    const {searchQuery} = req.query
 
-    const post = await PostMessage.findById(id)
+    try {
+        const title = new RegExp(searchQuery,'i')
+        const posts = await PostMessage.find({title})
 
-    const index = post.likes.findIndex((id) => id !== String(req.userId))
-
-    if(index === -1){
-        post.likes.push(req.userId)
-    }else{
-        post.likes = post.likes.filter((id) => id !== String(req.userId))
+        res.json({data:posts})
+    } catch (error) {
+        console.log(error)
     }
-
-    const updatedPost = await PostMessage.findByIdAndUpdate(id,post,{new:true})
-    // console.log(updatedPost);
-    req.json(updatedPost)
 }

@@ -1,10 +1,11 @@
 import express  from "express";
-import { createPost, getPosts, updatePost,deletePost ,likePost} from "../controllers/posts.js";
+import { createPost, getPosts,searchPost, updatePost,deletePost ,likePost} from "../controllers/posts.js";
 import { authMiddlware } from "../middleware/auth.js";
 
 const route = express.Router()
 
 route.get('/',getPosts)
+route.get('/search',searchPost)
 route.post('/',createPost)
 route.patch('/:id',authMiddlware,updatePost)
 route.patch('/:id/likePost',authMiddlware,likePost)

@@ -15,7 +15,8 @@ const App = () => {
       <NavBar/>
         <Switch>
         <Route path='/' exact component={Home} />
-        <Route path='/auth' exact component={Auth} />
+        <Route path='/auth' component={Auth} />
+        <Route path="/search" exact component={Home} />
        </Switch>
     </Container>
     </Router>

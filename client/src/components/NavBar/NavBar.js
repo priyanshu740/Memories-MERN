@@ -5,10 +5,13 @@ import memories from '../../images/memories.png';
 import { Toolbar, Avatar, Button } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function NavBar() {
     const classes = useStyles();
     const [user,setUser] = useState(JSON.parse(localStorage.getItem("user")))
+    // console.log(user)
+    
     const dispatch = useDispatch()
     const history = useHistory()
 
@@ -25,7 +28,7 @@ function NavBar() {
                     <img className={classes.image} src={memories} alt="icon" height="60" />
                 </div>
                 <Toolbar className={classes.toolbar}>
-                    {user?.result?(
+                    {user?(
                         <div className={classes.profile}>
                             <Avatar className={classes.purple} alt='' src={user.imageUrl}/>
                             <Typography className={classes.userName} variant="h6">{user.username}</Typography>
